@@ -1,0 +1,95 @@
+package javadsa;
+
+class DoublyLinkedList {
+
+    static class Node {
+        int data;
+        Node next, prev;
+
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+            this.prev = null;
+        }
+    }
+
+    Node head;
+
+    public void append(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            return;
+        }
+
+        Node last = head;
+        while (last.next != null) {
+            last = last.next;
+        }
+        last.next = newNode;
+        newNode.prev = last;
+    }
+
+    public void printList() {
+        Node node = head;
+        while (node != null) {
+            System.out.print(node.data + " <=> ");
+            node = node.next;
+        }
+        System.out.println("None");
+    }
+
+  
+    public DoublyLinkedList clone() {
+        if (head == null) {
+            return null;
+        }
+
+        Node current = head;
+        while (current != null) {
+            Node newNode = new Node(current.data);
+            newNode.next = current.next;
+            current.next = newNode;
+            newNode.prev = current;
+            if (newNode.next != null) {
+                newNode.next.prev = newNode;
+            }
+            current = newNode.next;
+        }
+
+
+        Node original = head;
+        Node clonedHead = head.next;
+        Node clonedCurrent = clonedHead;
+
+        while (original != null) {
+            original.next = original.next != null ? original.next.next : null;
+            if (clonedCurrent.next != null) {
+                clonedCurrent.next = clonedCurrent.next.next;
+            }
+            original = original.next;
+            clonedCurrent = clonedCurrent.next;
+        }
+
+      
+        DoublyLinkedList clonedList = new DoublyLinkedList();
+        clonedList.head = clonedHead;
+        return clonedList;
+    }
+
+    public static void main(String[] args) {
+        DoublyLinkedList dll = new DoublyLinkedList();
+        dll.append(1);
+        dll.append(2);
+        dll.append(3);
+        dll.append(4);
+
+        System.out.println("Original List:");
+        dll.printList();
+        DoublyLinkedList clonedList = dll.clone();
+
+        System.out.println("\nCloned List:");
+        clonedList.printList();
+    }
+}
+
